@@ -5,6 +5,6 @@
 using namespace std;
 class Calc {
 public:
-    double multiply(const std::vector<double>& operands);
-    double divide(const std::vector<double>& operands);
+    double multiply(const vector<double>& operands);
+    double divide(const vector<double>& operands);
 };
