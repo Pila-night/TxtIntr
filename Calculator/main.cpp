@@ -47,7 +47,7 @@ bool is_option(const string& s)
     if(is_number(s)) {
         return false; 
     }
-    return s == "-o" || s == "--operation"  || s == "--help" || s == "m" || s == "multiply" || s == "d" || s == "divide";
+    return s == "-o" || s == "--operation" ||s == "--help" || s == "m" || s == "multiply" || s == "d" || s == "divide";
 }
 
 int main(int argc, char* argv[])
@@ -61,29 +61,40 @@ int main(int argc, char* argv[])
     string operation;
     vector<double> operands;
     bool operation_found = false;
-    for(int i = 1; i < argc; ++i) {
-        if((string(argv[i]) == "-o" && (i + 1) < argc) || (string(argv[i]) == "--operation" && (i + 1) < argc)) {
+    for (int i = 1; i < argc; ++i) {
+        if ((string(argv[i]) == "-o" && (i + 1) < argc) || 
+            (string(argv[i]) == "--operation" && (i + 1) < argc))  {
             operation = argv[++i]; 
-            if(operation != "m" && operation != "multiply" && operation != "d" && operation != "divide") {
-                cerr << "Ошибка: Неверная операция: '" << operation << "'.\n";
+            if (operation != "m" && operation != "multiply" && 
+                operation != "d" && operation != "divide") {
+                cerr << "Ошибка: Неверная операция: '" << operation << "\n";
                 print_help();
                 return 1;
             }
-            operation_found = true; 
-        } else if(is_option(argv[i])) {
-            continue;
-        } else if(is_number(argv[i])) {
-            if(operation_found) { 
-                operands.push_back(stod(argv[i])); 
+            operation_found = true;
+        } else if (is_option(argv[i])) {
+            continue; 
+        } else if (is_number(argv[i])) {
+            if (operation_found) {
+                try {
+                    operands.push_back(stod(argv[i]));
+                } catch (const invalid_argument&) {
+                    cerr << "Ошибка: '" << argv[i] << "' не является действительным числом\n";
+                    return 1;
+                } catch (const out_of_range&) {
+                    cerr << "Ошибка: '" << argv[i] << "' выходит за пределы допустимого диапазона\n";
+                    return 1;
+                }
             } else {
-                cerr << "Ошибка: числа должны стоять после опции '-o' и типа операции." << endl;
+                cerr << "Ошибка: числа должны стоять после опции '-o' и типа операции\n" << endl;
                 return 1;
             }
         } else {
-            cerr << "Ошибка: '" << argv[i] << "' является неизвестной опцией." << endl;
+            cerr << "Ошибка: '" << argv[i] << "' не является числом\n" << endl; 
             return 1;
         }
     }
+
 
     if(operation.empty()) {
         cerr << "Ошибка: Не указана операция." << endl;
@@ -117,4 +128,4 @@ int main(int argc, char* argv[])
     }
 
     return 0;
-}
+    }
