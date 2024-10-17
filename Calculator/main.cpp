@@ -47,7 +47,7 @@ bool is_option(const string& s)
     if(is_number(s)) {
         return false; 
     }
-    return s == "-o" || s == "--help" || s == "m" || s == "multiply" || s == "d" || s == "divide";
+    return s == "-o" || s == "--operation"  || s == "--help" || s == "m" || s == "multiply" || s == "d" || s == "divide";
 }
 
 int main(int argc, char* argv[])
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
     vector<double> operands;
     bool operation_found = false;
     for(int i = 1; i < argc; ++i) {
-        if(string(argv[i]) == "-o" && (i + 1) < argc) {
+        if((string(argv[i]) == "-o" && (i + 1) < argc) || (string(argv[i]) == "--operation" && (i + 1) < argc)) {
             operation = argv[++i]; 
             if(operation != "m" && operation != "multiply" && operation != "d" && operation != "divide") {
                 cerr << "Ошибка: Неверная операция: '" << operation << "'.\n";
